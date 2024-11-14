@@ -1,4 +1,5 @@
 # CRM Web Service Package
+![Halk logo](https://crm.com.mk/assets/img/crlogo2mk.png)
 
 
 CRM пакетот е дизајниран за да овозможи безбедна комуникација помеѓу клиентот и Централниот Регистар, овозможувајќи 
