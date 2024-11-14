@@ -1,5 +1,5 @@
 # CRM Web Service Package
-![CRM Logo](https://crm.com.mk/assets/img/crlogo2mk.png)
+![CRM Logo](https://raw.githubusercontent.com/KalimeroMK/crm/refs/heads/master/crlogo2mk.png)
 
 CRM пакетот е дизајниран за да овозможи безбедна комуникација помеѓу клиентот и Централниот Регистар, овозможувајќи 
 пристап до податоци за правни лица. Сервисот нуди два главни продукти: `LEOSSCurrentView` и `AAListingForInsightSolution`, кои овозможуваат пристап до тековни податоци за ентитетот и годишни финансиски извештаи, соодветно.
