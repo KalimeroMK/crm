@@ -1,6 +1,6 @@
 <?php
 
-namespace Kalimero\Crm;
+namespace Kalimeromk\Crm;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -16,7 +16,8 @@ class CrmServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/crm.php' => config_path('crm.php'),
-            ], 'config');
+                __DIR__.'/../wsdl' => storage_path('app/public/wsdl'),
+                ], 'config');
         }
     }
 

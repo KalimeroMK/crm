@@ -1,6 +1,6 @@
 <?php
 
-namespace Kalimero\Crm;
+namespace Kalimeromk\Crm;
 
 use Illuminate\Support\Facades\Facade;
 

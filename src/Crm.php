@@ -1,6 +1,6 @@
 <?php
 
-namespace Kalimero\Crm;
+namespace Kalimeromk\Crm;
 
 use DOMDocument;
 use Exception;
@@ -17,7 +17,7 @@ class Crm
 {
     public function prepareXmlPayloadActive(int $number): string
     {
-        $productName = config('crm.keys.product_name') ?? 'default_product_name';
+        $productName =  config('crm.keys.PRODUCT_NAME');
         return <<<XML
 <?xml version="1.0" encoding="utf-8"?>
 <CrmRequest ProductName="$productName">
@@ -51,7 +51,7 @@ XML;
 
     public function prepareXmlPayloadAaListing(int $number, int $year): string
     {
-        $productName = config('crm.keys.aaListing') ?? 'default_aa_listing';
+        $productName = config('crm.keys.AA_LISTING');
         return <<<XML
 <?xml version="1.0" encoding="utf-8"?>
 <CrmRequest ProductName="$productName">
@@ -101,7 +101,7 @@ XML;
      */
     private function signDocument(DOMDocument $doc): void
     {
-        $objDSig = new XMLSecurityDSig();
+        $objDSig = new XMLSecurityDSig(false);
         $objDSig->setCanonicalMethod(XMLSecurityDSig::EXC_C14N);
 
         $objDSig->addReference(
@@ -112,63 +112,31 @@ XML;
         );
 
         // Load private key from PEM file
-        $privateKeyPath = config('crm.private_key_path');
-        if (!is_string($privateKeyPath) || !file_exists($privateKeyPath)) {
-            throw new Exception("Invalid private key path.");
-        }
-
+        $privateKeyPath = storage_path('keys/private_key.pem');
         $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, ['type' => 'private']);
         $objKey->loadKey($privateKeyPath, true);
 
         $objDSig->sign($objKey);
 
         // Load public certificate from PEM file
-        $publicCertPath = config('crm.public_cert_path');
-        if (!is_string($publicCertPath) || !file_exists($publicCertPath)) {
-            throw new Exception("Invalid public certificate path.");
-        }
+        $publicCertPath = storage_path('keys/public_cert.pem');
+        $objDSig->add509Cert(file_get_contents($publicCertPath));
 
-        $certContent = file_get_contents($publicCertPath);
-        if ($certContent === false) {
-            throw new Exception("Failed to load public certificate.");
-        }
-
-        $objDSig->add509Cert($certContent);
-
-        $element = $doc->documentElement;
-        if ($element === null) {
-            throw new Exception("Document element is null, unable to append signature.");
-        }
-
-        $objDSig->appendSignature($element);
+        $objDSig->appendSignature($doc->documentElement);
     }
 
     /**
-     * Make the SOAP request.
-     *
      * @param  string  $signedXmlPayload
-     * @return JsonResponse
+     * @return JsonResponse|bool|string
      * @throws Exception
      */
-    public function makeSoapRequest(string $signedXmlPayload): JsonResponse
+    public function makeSoapRequest(string $signedXmlPayload): JsonResponse|bool|string
     {
         try {
-            $wsdlPath = config('soap.wsdl.crm');
-            if (!is_string($wsdlPath)) {
-                throw new Exception("Invalid WSDL path in configuration.");
-            }
-
-            $client = new SoapClient(Storage::path($wsdlPath), [
+            $client = new SoapClient(Storage::path(config('crm.CRM')), [
                 'cache_wsdl' => WSDL_CACHE_NONE,
             ]);
-
             $response = $client->ProcessSignedRequest(['parameters' => $signedXmlPayload]);
-
-            if (!is_object($response)) {
-                throw new Exception("Invalid response type from SOAP request.");
-            }
-
-            // Process and list the CrmResultItem elements from the response
             return $this->listCrmResultItems($response);
         } catch (SoapFault $e) {
             throw new Exception("SOAP Error: " . $e->getMessage());
@@ -176,10 +144,10 @@ XML;
     }
 
     /**
-     * @param object $response
-     * @return JsonResponse
+     * @param $response
+     * @return bool|JsonResponse|string
      */
-    public function listCrmResultItems(object $response): JsonResponse
+    public function listCrmResultItems($response): bool|JsonResponse|string
     {
         try {
             if (!isset($response->ProcessSignedRequestResult)) {
@@ -187,13 +155,7 @@ XML;
             }
             $responseXml = $response->ProcessSignedRequestResult;
             $xml = new SimpleXMLElement($responseXml);
-
-            $jsonString = json_encode($xml);
-            if ($jsonString === false) {
-                throw new Exception("Failed to encode XML to JSON.");
-            }
-
-            return response()->json(json_decode($jsonString, true));
+            return json_encode($xml);
         } catch (Exception $e) {
             Log::error("Error parsing XML: " . $e->getMessage());
             return response()->json(['error' => 'Error parsing XML response.'], 500);

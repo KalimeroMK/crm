@@ -31,12 +31,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Kalimero\\Crm\\": "src"
+            "Kalimeromk\\Crm\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Kalimero\\Crm\\Tests\\": "tests"
+            "Kalimeromk\\Crm\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -50,7 +50,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Kalimero\\Crm\\CrmServiceProvider"
+                "Kalimeromk\\Crm\\CrmServiceProvider"
             ],
             "aliases": {
                 "Test": "Test\\Test\\TestFacade"

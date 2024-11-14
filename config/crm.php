@@ -1,13 +1,13 @@
 <?php
 
 return [
-    'wsdl' => [
-        'crm' => env('CRM_ENV') === 'local' ? __DIR__.'/../wsdl/crm-wsdl.local.xml' : env('CRM_WSDL_URL', __DIR__.'/../wsdl/crm-wsdl.xml'),
-    ],
+
+    'CRM' => env('CRM_WSDL_PATH', storage_path('public/wsdl/crm-wsdl.xml')),
+
     'keys' => [
-        'private_key' => storage_path('keys/private_key.pem'),
-        'public_cert' => storage_path('keys/public_cert.pem'),
-        'product_name' => env('CRM_PRODUCT_NAME', 'Kalimero'),
-        'aaListing' => env('CRM_AA_LISTING', 'AAListing'),
+        'PRIVATE_KEY' => env('CRM_PRIVATE_KEY_PATH', storage_path('keys/private_key.pem')),
+        'PUBLIC_CERT' => env('CRM_PUBLIC_CERT_PATH', storage_path('keys/public_cert.pem')),
+        'PRODUCT_NAME' => env('CRM_PRODUCT_NAME', 'LEOSSCurrentView'),
+        'AA_LISTING' => env('CRM_AA_LISTING', 'AAListing'),
     ],
 ];

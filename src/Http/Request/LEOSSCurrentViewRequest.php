@@ -1,6 +1,6 @@
 <?php
 
-namespace Kalimero\Crm\Http\Request;
+namespace Kalimeromk\Crm\Http\Request;
 
 use Illuminate\Foundation\Http\FormRequest;
 
