@@ -1,0 +1,94 @@
+<?php
+
+namespace Illuminate\Support;
+
+use ArrayAccess;
+use Illuminate\Contracts\Support\CanBeEscapedWhenCastToString;
+use Illuminate\Support\Traits\EnumeratesValues;
+
+/**
+ * @template TKey of array-key
+ * @template TValue
+ *
+ * @implements \ArrayAccess<TKey, TValue>
+ * @implements \Illuminate\Support\Enumerable<TKey, TValue>
+ */
+class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerable
+{
+    /**
+     * @use \Illuminate\Support\Traits\EnumeratesValues<TKey, TValue>
+     */
+    use EnumeratesValues;
+
+   /**
+    * Get one or a specified number of items randomly from the collection.
+    *
+    * @param  (callable(TValue): int)|int|null  $number
+    * @return ($number is null ? TValue : static<int, TValue>)
+    *
+    * @throws \InvalidArgumentException
+    */
+    public function random($number = null);
+
+    /**
+     * Create a collection by using this collection for keys and another for its values.
+     *
+     * @template TCombineValue
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TCombineValue>|iterable<array-key, TCombineValue>  $values
+     * @return static<array-key, TCombineValue>
+     */
+    public function combine($values);
+
+    /**
+     * Get and remove the last N items from the collection.
+     *
+     * @param  int  $count
+     * @return ($count is 1 ? TValue|null : static<int, TValue>)
+     */
+    public function pop($count = 1);
+
+    /**
+     * Get and remove the first N items from the collection.
+     *
+     * @param  int  $count
+     * @return ($count is 1 ? TValue|null : static<int, TValue>)
+     */
+    public function shift($count = 1);
+
+    /**
+     * Push all of the given items onto the collection.
+     *
+     * @template TConcatKey of array-key
+     * @template TConcatValue
+     *
+     * @param  iterable<TConcatKey, TConcatValue>  $source
+     * @return static<TKey|TConcatKey, TValue|TConcatValue>
+     * TODO: this is for 9.x compatibility. Remove it when we drop 9.x support.
+     */
+    public function concat($source);
+}
+
+/**
+ * @template TKey of array-key
+ * @template TValue
+ *
+ * @implements \Illuminate\Support\Enumerable<TKey, TValue>
+ */
+class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
+{
+    /**
+     * @use \Illuminate\Support\Traits\EnumeratesValues<TKey, TValue>
+     */
+    use EnumeratesValues;
+
+    /**
+     * Create a collection by using this collection for keys and another for its values.
+     *
+     * @template TCombineValue
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TCombineValue>|iterable<array-key, TCombineValue>  $values
+     * @return static<array-key, TCombineValue>
+     */
+    public function combine($values);
+}
