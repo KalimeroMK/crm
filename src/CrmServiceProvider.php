@@ -30,7 +30,7 @@ class CrmServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/crm.php', 'crm');
 
         // Register the main class to use with the facade
-        $this->app->singleton('crm', function () {
+        $this->app->singleton('crm', function (): Crm {
             return new Crm;
         });
     }

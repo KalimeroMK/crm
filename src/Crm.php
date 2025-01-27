@@ -70,8 +70,6 @@ XML;
     /**
      * Sign the XML payload using PEM files for the private key and certificate.
      *
-     * @param  string  $xmlPayload
-     * @return string
      * @throws Exception
      */
     public function signXml(string $xmlPayload): string
@@ -96,7 +94,6 @@ XML;
     /**
      * Sign the provided DOMDocument with the PEM private key and certificate.
      *
-     * @param  DOMDocument  $doc
      * @throws Exception
      */
     private function signDocument(DOMDocument $doc): void
@@ -126,8 +123,6 @@ XML;
     }
 
     /**
-     * @param  string  $signedXmlPayload
-     * @return JsonResponse|bool|string
      * @throws Exception
      */
     public function makeSoapRequest(string $signedXmlPayload): JsonResponse|bool|string
@@ -139,13 +134,12 @@ XML;
             $response = $client->ProcessSignedRequest(['parameters' => $signedXmlPayload]);
             return $this->listCrmResultItems($response);
         } catch (SoapFault $e) {
-            throw new Exception("SOAP Error: " . $e->getMessage());
+            throw new Exception("SOAP Error: " . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
     /**
      * @param $response
-     * @return bool|JsonResponse|string
      */
     public function listCrmResultItems($response): bool|JsonResponse|string
     {

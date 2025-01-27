@@ -24,7 +24,6 @@ namespace Kalimeromk\Crm\Http\Controllers
         /**
          * Send a SOAP request with a signed XML payload for LEOSSCurrentView.
          *
-         * @param  LEOSSCurrentViewRequest  $request
          * @return JsonResponse
          */
         public function LEOSSCurrentView(LEOSSCurrentViewRequest $request)
@@ -43,7 +42,6 @@ namespace Kalimeromk\Crm\Http\Controllers
         /**
          * Send a SOAP request with a signed XML payload for AA Listing.
          *
-         * @param  AAListingRequest  $request
          * @return JsonResponse
          */
         public function AAListing(AAListingRequest $request)
